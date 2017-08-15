@@ -1,0 +1,130 @@
+In [1]: from apps.dojo.models import *
+
+In [2]: Dojo.objects.first().ninjas
+---------------------------------------------------------------------------
+AttributeError                            Traceback (most recent call last)
+<ipython-input-2-c80cb9474b9c> in <module>()
+----> 1 Dojo.objects.first().ninjas
+
+AttributeError: 'NoneType' object has no attribute 'ninjas'
+
+In [3]: Dojo.objects.all()
+Out[3]: <QuerySet []>
+
+In [4]: Ninja.objects.first().dojo
+---------------------------------------------------------------------------
+AttributeError                            Traceback (most recent call last)
+<ipython-input-4-948fef003c38> in <module>()
+----> 1 Ninja.objects.first().dojo
+
+AttributeError: 'NoneType' object has no attribute 'dojo'
+
+In [5]: Ninja.objects.all()
+Out[5]: <QuerySet []>
+
+In [6]: Ninja.objects.first().dojo
+---------------------------------------------------------------------------
+AttributeError                            Traceback (most recent call last)
+<ipython-input-6-948fef003c38> in <module>()
+----> 1 Ninja.objects.first().dojo
+
+AttributeError: 'NoneType' object has no attribute 'dojo'
+
+In [7]: Dojo.objects.create(name = "CodingDojo Silicon Valley", city = "Mountain View", state = "CA")
+Out[7]: <Dojo: Dojo object>
+
+In [8]: Dojo.objects.create(name = "CodingDojo Seattle", city = "Seattle", state = "WA")
+Out[8]: <Dojo: Dojo object>
+
+In [9]: Dojo.objects.create(name = "CodingDojo New York", city = "New York", state = "NY")
+Out[9]: <Dojo: Dojo object>
+
+In [10]: Dojo.objects.get(id__gt=0).delete()
+--------------------------------------------------------------------
+MultipleObjectsReturned                   Traceback (most recent call last)
+<ipython-input-10-375cfb33d1d0> in <module>()
+----> 1 Dojo.objects.get(id__gt=0).delete()
+
+/Users/harshada/Desktop/DojoAssignments/Python/python_stack/myEnvironments/djangoEnv/lib/python2.7/site-packages/django/db/models/manager.pyc in manager_method(self, *args, **kwargs)
+     83         def create_method(name, method):
+     84             def manager_method(self, *args, **kwargs):
+---> 85                 return getattr(self.get_queryset(), name)(*args, **kwargs)
+     86             manager_method.__name__ = method.__name__
+     87             manager_method.__doc__ = method.__doc__
+
+/Users/harshada/Desktop/DojoAssignments/Python/python_stack/myEnvironments/djangoEnv/lib/python2.7/site-packages/django/db/models/query.pyc in get(self, *args, **kwargs)
+    387         raise self.model.MultipleObjectsReturned(
+    388             "get() returned more than one %s -- it returned %s!" %
+--> 389             (self.model._meta.object_name, num)
+    390         )
+    391
+
+MultipleObjectsReturned: get() returned more than one Dojo -- it returned 3!
+
+In [11]: Dojo.objects.filter(id__gt=0).delete()
+Out[11]: (3, {u'dojo.Dojo': 3, u'dojo.Ninja': 0})
+
+In [12]: Dojo.objects.create(name = "CodingDojo Silicon Valley", city = "Mountain View", state = "CA")
+Out[12]: <Dojo: Dojo object>
+
+In [13]: Dojo.objects.create(name = "CodingDojo Seattle", city = "Seattle", state = "WA")
+Out[13]: <Dojo: Dojo object>
+
+In [14]: Dojo.objects.create(name = "CodingDojo New York", city = "New York", state = "NY")
+Out[14]: <Dojo: Dojo object>
+
+In [15]: Ninja.objects.create(first_name = "Grant", last_name = "Brooks", dojo = Dojo.objects.get(id = 4))
+Out[15]: <Ninja: Ninja object>
+
+In [16]: Ninja.objects.create(first_name = "Harshada", last_name = "Kurahatti", dojo = Dojo.objects.get(id = 4))
+Out[16]: <Ninja: Ninja object>
+
+In [17]: Ninja.objects.create(first_name = "Liseth", last_name = "C", dojo = Dojo.objects.get(id = 4))
+Out[17]: <Ninja: Ninja object>
+
+In [18]: Ninja.objects.create(first_name = "Tanvi", last_name = "Vyas", dojo = Dojo.objects.get(id = 5))
+Out[18]: <Ninja: Ninja object>
+
+In [19]: Ninja.objects.create(first_name = "Toro", last_name = "Roan", dojo = Dojo.objects.get(id = 5))
+Out[19]: <Ninja: Ninja object>
+
+In [20]: Ninja.objects.create(first_name = "Jonathan", last_name = "L", dojo = Dojo.objects.get(id = 5))
+Out[20]: <Ninja: Ninja object>
+
+In [21]: Ninja.objects.create(first_name = "Adrianna", last_name = "Grayson", dojo = Dojo.objects.get(id = 6))
+Out[21]: <Ninja: Ninja object>
+
+In [22]: Ninja.objects.create(first_name = "Ali", last_name = "Reza", dojo = Dojo.objects.get(id = 6))
+Out[22]: <Ninja: Ninja object>
+
+In [23]: Ninja.objects.create(first_name = "Jason", last_name = "K", dojo = Dojo.objects.get(id = 6))
+Out[23]: <Ninja: Ninja object>
+
+In [24]: Ninja.objects.filter(dojo = "4").values()
+Out[24]: <QuerySet [{u'dojo_id': 4, 'first_name': u'Grant', 'last_name': u'Brooks', u'id': 1}, {u'dojo_id': 4, 'first_name': u'Harshada', 'last_name': u'Kurahatti', u'id': 2}, {u'dojo_id': 4, 'first_name': u'Liseth', 'last_name': u'C', u'id': 3}]>
+
+In [25]: Ninja.objects.filter(dojo_id = "4").values()
+Out[25]: <QuerySet [{u'dojo_id': 4, 'first_name': u'Grant', 'last_name': u'Brooks', u'id': 1}, {u'dojo_id': 4, 'first_name': u'Harshada', 'last_name': u'Kurahatti', u'id': 2}, {u'dojo_id': 4, 'first_name': u'Liseth', 'last_name': u'C', u'id': 3}]>
+
+In [26]: Ninja.objects.filter(dojo_id = "6").values()
+Out[26]: <QuerySet [{u'dojo_id': 6, 'first_name': u'Adrianna', 'last_name': u'Grayson', u'id': 7}, {u'dojo_id': 6, 'first_name': u'Ali', 'last_name': u'Reza', u'id': 8}, {u'dojo_id': 6, 'first_name': u'Jason', 'last_name': u'K', u'id': 9}]>
+
+In [27]: Ninja.objects.last().values()
+---------------------------------------------------------------------------
+AttributeError                            Traceback (most recent call last)
+<ipython-input-27-b134a4929286> in <module>()
+----> 1 Ninja.objects.last().values()
+
+AttributeError: 'Ninja' object has no attribute 'values'
+
+In [28]: Ninja.objects.last()
+Out[28]: <Ninja: Ninja object>
+
+In [29]: Ninja.objects.last().id
+Out[29]: 9
+
+In [30]: Dojo.objects.last().id
+Out[30]: 6
+
+In [31]: Ninja.objects.filter(dojo_id = "6").values()
+Out[31]: <QuerySet [{u'dojo_id': 6, 'first_name': u'Adrianna', 'last_name': u'Grayson', u'id': 7}, {u'dojo_id': 6, 'first_name': u'Ali', 'last_name': u'Reza', u'id': 8}, {u'dojo_id': 6, 'first_name': u'Jason', 'last_name': u'K', u'id': 9}]>
