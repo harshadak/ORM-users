@@ -1,0 +1,522 @@
+In [1]: from apps.book_authors.models import *
+
+In [2]: Book.objects.get(name="C sharp").id
+Out[2]: 1
+
+In [3]: a = Book.objects.get(name = "C sharp")
+
+In [4]: a.name = "C#"
+
+In [5]: a.save()
+
+In [6]: a Author.objects.get(id = "5")
+  File "<ipython-input-6-80870042512a>", line 1
+    a Author.objects.get(id = "5")
+           ^
+SyntaxError: invalid syntax
+
+
+In [7]: a = Author.objects.get(id = "5")
+
+In [8]: a.first_name = "Ketul"
+
+In [9]: a.save()
+
+In [10]: Author.objects.get(id ="1").books_authors.add(Book.objects.get(id ="1"))
+
+In [11]: Author.objects.get(id ="1").books_authors.add(Book.objects.get(id="1"), Book.objects.get(id ="2"))
+
+In [12]: Book.objects.get(id="4").books_authors.add(Author.objects.get(id="4"),Author.objects.get(id="5"))
+---------------------------------------------------------------------------
+AttributeError                            Traceback (most recent call last)
+<ipython-input-12-9129e0fe5ab4> in <module>()
+----> 1 Book.objects.get(id="4").books_authors.add(Author.objects.get(id="4"),Author.objects.get(id="5"))
+
+AttributeError: 'Book' object has no attribute 'books_authors'
+
+In [13]: Book.objects.get(id="4").authors.add(Author.objects.get(id="4"),Author.objects.get(id="5"))
+
+In [14]: Author.objects.get(id ="2").books_authors.add(Book.objects.get(id="1"), Book.objects.get(id ="2"),Book.objects.get(id="3"))
+
+In [15]: Author.objects.get(id ="3").books_authors.add(Book.objects.get(id="1"), Book.objects.get(id ="2"),Book.objects.get(id="3"),Book.objects.get(id="4"))
+
+In [16]: Author.objects.get(id="4").books_authors.add(Book.objects.all())
+---------------------------------------------------------------------------
+TypeError                                 Traceback (most recent call last)
+<ipython-input-16-ff33187031ce> in <module>()
+----> 1 Author.objects.get(id="4").books_authors.add(Book.objects.all())
+
+/Users/gwb/Desktop/DojoAssignments/Python/python_stack/myEnvironments/djangoenv/lib/python2.7/site-packages/django/db/models/fields/related_descriptors.pyc in add(self, *objs)
+    879             db = router.db_for_write(self.through, instance=self.instance)
+    880             with transaction.atomic(using=db, savepoint=False):
+--> 881                 self._add_items(self.source_field_name, self.target_field_name, *objs)
+    882 
+    883                 # If this is a symmetrical m2m relation to self, add the mirror entry in the m2m table
+
+/Users/gwb/Desktop/DojoAssignments/Python/python_stack/myEnvironments/djangoenv/lib/python2.7/site-packages/django/db/models/fields/related_descriptors.pyc in _add_items(self, source_field_name, target_field_name, *objs)
+   1026                         .filter(**{
+   1027                             source_field_name: self.related_val[0],
+-> 1028                             '%s__in' % target_field_name: new_ids,
+   1029                         }))
+   1030                 new_ids = new_ids - set(vals)
+
+/Users/gwb/Desktop/DojoAssignments/Python/python_stack/myEnvironments/djangoenv/lib/python2.7/site-packages/django/db/models/query.pyc in filter(self, *args, **kwargs)
+    792         set.
+    793         """
+--> 794         return self._filter_or_exclude(False, *args, **kwargs)
+    795 
+    796     def exclude(self, *args, **kwargs):
+
+/Users/gwb/Desktop/DojoAssignments/Python/python_stack/myEnvironments/djangoenv/lib/python2.7/site-packages/django/db/models/query.pyc in _filter_or_exclude(self, negate, *args, **kwargs)
+    810             clone.query.add_q(~Q(*args, **kwargs))
+    811         else:
+--> 812             clone.query.add_q(Q(*args, **kwargs))
+    813         return clone
+    814 
+
+/Users/gwb/Desktop/DojoAssignments/Python/python_stack/myEnvironments/djangoenv/lib/python2.7/site-packages/django/db/models/sql/query.pyc in add_q(self, q_object)
+   1225         existing_inner = set(
+   1226             (a for a in self.alias_map if self.alias_map[a].join_type == INNER))
+-> 1227         clause, _ = self._add_q(q_object, self.used_aliases)
+   1228         if clause:
+   1229             self.where.add(clause, AND)
+
+/Users/gwb/Desktop/DojoAssignments/Python/python_stack/myEnvironments/djangoenv/lib/python2.7/site-packages/django/db/models/sql/query.pyc in _add_q(self, q_object, used_aliases, branch_negated, current_negated, allow_joins, split_subq)
+   1251                     child, can_reuse=used_aliases, branch_negated=branch_negated,
+   1252                     current_negated=current_negated, connector=connector,
+-> 1253                     allow_joins=allow_joins, split_subq=split_subq,
+   1254                 )
+   1255                 joinpromoter.add_votes(needed_inner)
+
+/Users/gwb/Desktop/DojoAssignments/Python/python_stack/myEnvironments/djangoenv/lib/python2.7/site-packages/django/db/models/sql/query.pyc in build_filter(self, filter_expr, branch_negated, current_negated, can_reuse, connector, allow_joins, split_subq)
+   1181             else:
+   1182                 lhs = MultiColSource(alias, targets, sources, field)
+-> 1183             condition = lookup_class(lhs, value)
+   1184             lookup_type = lookup_class.lookup_name
+   1185         else:
+
+/Users/gwb/Desktop/DojoAssignments/Python/python_stack/myEnvironments/djangoenv/lib/python2.7/site-packages/django/db/models/lookups.pyc in __init__(self, lhs, rhs)
+     17     def __init__(self, lhs, rhs):
+     18         self.lhs, self.rhs = lhs, rhs
+---> 19         self.rhs = self.get_prep_lookup()
+     20         if hasattr(self.lhs, 'get_bilateral_transforms'):
+     21             bilateral_transforms = self.lhs.get_bilateral_transforms()
+
+/Users/gwb/Desktop/DojoAssignments/Python/python_stack/myEnvironments/djangoenv/lib/python2.7/site-packages/django/db/models/fields/related_lookups.pyc in get_prep_lookup(self)
+     54                 # only one as we don't get to the direct value branch otherwise.
+     55                 target_field = self.lhs.output_field.get_path_info()[-1].target_fields[-1]
+---> 56                 self.rhs = [target_field.get_prep_value(v) for v in self.rhs]
+     57         return super(RelatedIn, self).get_prep_lookup()
+     58 
+
+/Users/gwb/Desktop/DojoAssignments/Python/python_stack/myEnvironments/djangoenv/lib/python2.7/site-packages/django/db/models/fields/__init__.pyc in get_prep_value(self, value)
+    944         if value is None:
+    945             return None
+--> 946         return int(value)
+    947 
+    948     def contribute_to_class(self, cls, name, **kwargs):
+
+TypeError: int() argument must be a string or a number, not 'QuerySet'
+
+In [17]: Author.objects.get(id="4").books_authors.all()
+Out[17]: <QuerySet []>
+
+In [18]: Author.objects.get(id ="4").books_authors.add(Book.objects.get(id="1"), Book.objects.get(id ="2"),Book.objects.get(id="3"),Book.objects.get(id="4"),Book.objects.g
+    ...: et(id="5"))
+
+In [19]: Book.objects.filter(id="3").author.first_name
+---------------------------------------------------------------------------
+AttributeError                            Traceback (most recent call last)
+<ipython-input-19-cd59beff955c> in <module>()
+----> 1 Book.objects.filter(id="3").author.first_name
+
+AttributeError: 'QuerySet' object has no attribute 'author'
+
+In [20]: Book.objects.filter(id="3").books_authors.first_name
+---------------------------------------------------------------------------
+AttributeError                            Traceback (most recent call last)
+<ipython-input-20-755f7f5c4079> in <module>()
+----> 1 Book.objects.filter(id="3").books_authors.first_name
+
+AttributeError: 'QuerySet' object has no attribute 'books_authors'
+
+In [21]: Book.objects.filter(id="3").authors
+---------------------------------------------------------------------------
+AttributeError                            Traceback (most recent call last)
+<ipython-input-21-261407200c2d> in <module>()
+----> 1 Book.objects.filter(id="3").authors
+
+AttributeError: 'QuerySet' object has no attribute 'authors'
+
+In [22]: Book.objects.filter(id="3").books_authors
+---------------------------------------------------------------------------
+AttributeError                            Traceback (most recent call last)
+<ipython-input-22-6fea64ad177b> in <module>()
+----> 1 Book.objects.filter(id="3").books_authors
+
+AttributeError: 'QuerySet' object has no attribute 'books_authors'
+
+In [23]: Book.objects.filter(id="3").name
+---------------------------------------------------------------------------
+AttributeError                            Traceback (most recent call last)
+<ipython-input-23-2974f1375738> in <module>()
+----> 1 Book.objects.filter(id="3").name
+
+AttributeError: 'QuerySet' object has no attribute 'name'
+
+In [24]: Book.objects.filter(id="3").values().name
+---------------------------------------------------------------------------
+AttributeError                            Traceback (most recent call last)
+<ipython-input-24-993e4ce92551> in <module>()
+----> 1 Book.objects.filter(id="3").values().name
+
+AttributeError: 'QuerySet' object has no attribute 'name'
+
+In [25]: Book.objects.filter(id="3").values()
+Out[25]: <QuerySet [{'updated_at': datetime.datetime(2017, 8, 16, 0, 29, 40, 559707, tzinfo=<UTC>), 'created_at': datetime.datetime(2017, 8, 16, 0, 29, 40, 559661, tzinfo=<UTC>), 'desc': u'No description', u'id': 3, 'name': u'Python'}]>
+
+In [26]: Book.objects.filter(id="3").book_authors.all()
+---------------------------------------------------------------------------
+AttributeError                            Traceback (most recent call last)
+<ipython-input-26-01d9f99f412d> in <module>()
+----> 1 Book.objects.filter(id="3").book_authors.all()
+
+AttributeError: 'QuerySet' object has no attribute 'book_authors'
+
+In [27]: Book.objects.get(id="3").book_authors.all()
+---------------------------------------------------------------------------
+AttributeError                            Traceback (most recent call last)
+<ipython-input-27-fef5cf676dd9> in <module>()
+----> 1 Book.objects.get(id="3").book_authors.all()
+
+AttributeError: 'Book' object has no attribute 'book_authors'
+
+In [28]: Book.objects.get(id="3").authors.all()
+Out[28]: <QuerySet [<Author: Author object>, <Author: Author object>, <Author: Author object>]>
+
+In [29]: Book.objects.get(id="3").authors.all().values()
+Out[29]: <QuerySet [{'first_name': u'Speros', 'last_name': u'', 'notes': u'No notes yet', 'updated_at': datetime.datetime(2017, 8, 16, 0, 30, 51, 878111, tzinfo=<UTC>), u'id': 2, 'email': u'', 'created_at': datetime.datetime(2017, 8, 16, 0, 30, 51, 878066, tzinfo=<UTC>)}, {'first_name': u'John', 'last_name': u'', 'notes': u'No notes yet', 'updated_at': datetime.datetime(2017, 8, 16, 0, 30, 59, 949160, tzinfo=<UTC>), u'id': 3, 'email': u'', 'created_at': datetime.datetime(2017, 8, 16, 0, 30, 59, 949114, tzinfo=<UTC>)}, {'first_name': u'Jadee', 'last_name': u'', 'notes': u'No notes yet', 'updated_at': datetime.datetime(2017, 8, 16, 0, 31, 6, 661060, tzinfo=<UTC>), u'id': 4, 'email': u'', 'created_at': datetime.datetime(2017, 8, 16, 0, 31, 6, 661012, tzinfo=<UTC>)}]>
+
+In [30]: Book.objects.get(id="3").authors.all().values(first_name)
+---------------------------------------------------------------------------
+NameError                                 Traceback (most recent call last)
+<ipython-input-30-67833d73127c> in <module>()
+----> 1 Book.objects.get(id="3").authors.all().values(first_name)
+
+NameError: name 'first_name' is not defined
+
+In [31]: Book.objects.get(id="3").authors.all().values("first_name")
+Out[31]: <QuerySet [{'first_name': u'Speros'}, {'first_name': u'John'}, {'first_name': u'Jadee'}]>
+
+In [32]: Book.objects.get(id="3").authors.first().values("first_name")
+---------------------------------------------------------------------------
+AttributeError                            Traceback (most recent call last)
+<ipython-input-32-deafcd2b7979> in <module>()
+----> 1 Book.objects.get(id="3").authors.first().values("first_name")
+
+AttributeError: 'Author' object has no attribute 'values'
+
+In [33]: Book.objects.get(id="3").authors.Author.objecst.get(id=1).values("first_name")
+---------------------------------------------------------------------------
+AttributeError                            Traceback (most recent call last)
+<ipython-input-33-9cf5e17b72b7> in <module>()
+----> 1 Book.objects.get(id="3").authors.Author.objecst.get(id=1).values("first_name")
+
+AttributeError: 'ManyRelatedManager' object has no attribute 'Author'
+
+In [34]: Book.objects.get(id="3").authors.get(Author.objecst.get(id="1")).values("first_name")
+---------------------------------------------------------------------------
+AttributeError                            Traceback (most recent call last)
+<ipython-input-34-971cae7ab610> in <module>()
+----> 1 Book.objects.get(id="3").authors.get(Author.objecst.get(id="1")).values("first_name")
+
+AttributeError: type object 'Author' has no attribute 'objecst'
+
+In [35]: Book.objects.get(id="3").authors.get(Author.objecst.get(id="1"))
+---------------------------------------------------------------------------
+AttributeError                            Traceback (most recent call last)
+<ipython-input-35-e58affe4681c> in <module>()
+----> 1 Book.objects.get(id="3").authors.get(Author.objecst.get(id="1"))
+
+AttributeError: type object 'Author' has no attribute 'objecst'
+
+In [36]: Book.objects.get(id="3").authors.get(Author.objects.get(id="1"))
+---------------------------------------------------------------------------
+TypeError                                 Traceback (most recent call last)
+<ipython-input-36-f6388f09b518> in <module>()
+----> 1 Book.objects.get(id="3").authors.get(Author.objects.get(id="1"))
+
+/Users/gwb/Desktop/DojoAssignments/Python/python_stack/myEnvironments/djangoenv/lib/python2.7/site-packages/django/db/models/manager.pyc in manager_method(self, *args, **kwargs)
+     83         def create_method(name, method):
+     84             def manager_method(self, *args, **kwargs):
+---> 85                 return getattr(self.get_queryset(), name)(*args, **kwargs)
+     86             manager_method.__name__ = method.__name__
+     87             manager_method.__doc__ = method.__doc__
+
+/Users/gwb/Desktop/DojoAssignments/Python/python_stack/myEnvironments/djangoenv/lib/python2.7/site-packages/django/db/models/query.pyc in get(self, *args, **kwargs)
+    374         keyword arguments.
+    375         """
+--> 376         clone = self.filter(*args, **kwargs)
+    377         if self.query.can_filter() and not self.query.distinct_fields:
+    378             clone = clone.order_by()
+
+/Users/gwb/Desktop/DojoAssignments/Python/python_stack/myEnvironments/djangoenv/lib/python2.7/site-packages/django/db/models/query.pyc in filter(self, *args, **kwargs)
+    792         set.
+    793         """
+--> 794         return self._filter_or_exclude(False, *args, **kwargs)
+    795 
+    796     def exclude(self, *args, **kwargs):
+
+/Users/gwb/Desktop/DojoAssignments/Python/python_stack/myEnvironments/djangoenv/lib/python2.7/site-packages/django/db/models/query.pyc in _filter_or_exclude(self, negate, *args, **kwargs)
+    810             clone.query.add_q(~Q(*args, **kwargs))
+    811         else:
+--> 812             clone.query.add_q(Q(*args, **kwargs))
+    813         return clone
+    814 
+
+/Users/gwb/Desktop/DojoAssignments/Python/python_stack/myEnvironments/djangoenv/lib/python2.7/site-packages/django/db/models/sql/query.pyc in add_q(self, q_object)
+   1225         existing_inner = set(
+   1226             (a for a in self.alias_map if self.alias_map[a].join_type == INNER))
+-> 1227         clause, _ = self._add_q(q_object, self.used_aliases)
+   1228         if clause:
+   1229             self.where.add(clause, AND)
+
+/Users/gwb/Desktop/DojoAssignments/Python/python_stack/myEnvironments/djangoenv/lib/python2.7/site-packages/django/db/models/sql/query.pyc in _add_q(self, q_object, used_aliases, branch_negated, current_negated, allow_joins, split_subq)
+   1251                     child, can_reuse=used_aliases, branch_negated=branch_negated,
+   1252                     current_negated=current_negated, connector=connector,
+-> 1253                     allow_joins=allow_joins, split_subq=split_subq,
+   1254                 )
+   1255                 joinpromoter.add_votes(needed_inner)
+
+/Users/gwb/Desktop/DojoAssignments/Python/python_stack/myEnvironments/djangoenv/lib/python2.7/site-packages/django/db/models/sql/query.pyc in build_filter(self, filter_expr, branch_negated, current_negated, can_reuse, connector, allow_joins, split_subq)
+   1128         if isinstance(filter_expr, dict):
+   1129             raise FieldError("Cannot parse keyword query as dict")
+-> 1130         arg, value = filter_expr
+   1131         if not arg:
+   1132             raise FieldError("Cannot parse keyword query %r" % arg)
+
+TypeError: 'Author' object is not iterable
+
+In [37]: b = Book.objects.get(id="3").Author.objects.get(id="1")
+---------------------------------------------------------------------------
+AttributeError                            Traceback (most recent call last)
+<ipython-input-37-ee15fcf67e96> in <module>()
+----> 1 b = Book.objects.get(id="3").Author.objects.get(id="1")
+
+AttributeError: 'Book' object has no attribute 'Author'
+
+In [38]: b = Book.objects.get(id="3").authors.objects.get(id="1")
+---------------------------------------------------------------------------
+AttributeError                            Traceback (most recent call last)
+<ipython-input-38-5b047f4a51e7> in <module>()
+----> 1 b = Book.objects.get(id="3").authors.objects.get(id="1")
+
+AttributeError: 'ManyRelatedManager' object has no attribute 'objects'
+
+In [39]: Book.objects.get(id=3).authors.all()
+Out[39]: <QuerySet [<Author: Author object>, <Author: Author object>, <Author: Author object>]>
+
+In [40]: Book.objects.get(id=3).authors.get(id=1)
+---------------------------------------------------------------------------
+DoesNotExist                              Traceback (most recent call last)
+<ipython-input-40-3e046bbc061a> in <module>()
+----> 1 Book.objects.get(id=3).authors.get(id=1)
+
+/Users/gwb/Desktop/DojoAssignments/Python/python_stack/myEnvironments/djangoenv/lib/python2.7/site-packages/django/db/models/manager.pyc in manager_method(self, *args, **kwargs)
+     83         def create_method(name, method):
+     84             def manager_method(self, *args, **kwargs):
+---> 85                 return getattr(self.get_queryset(), name)(*args, **kwargs)
+     86             manager_method.__name__ = method.__name__
+     87             manager_method.__doc__ = method.__doc__
+
+/Users/gwb/Desktop/DojoAssignments/Python/python_stack/myEnvironments/djangoenv/lib/python2.7/site-packages/django/db/models/query.pyc in get(self, *args, **kwargs)
+    383             raise self.model.DoesNotExist(
+    384                 "%s matching query does not exist." %
+--> 385                 self.model._meta.object_name
+    386             )
+    387         raise self.model.MultipleObjectsReturned(
+
+DoesNotExist: Author matching query does not exist.
+
+In [41]: Book.objects.get(id=3).authors.get(id=2)
+Out[41]: <Author: Author object>
+
+In [42]: Book.objects.get(id=3).authors.first()
+Out[42]: <Author: Author object>
+
+In [43]: b = Book.objects.get(id=3).authors.first()
+
+In [44]: b.delete()
+Out[44]: (4, {u'book_authors.Author': 1, u'book_authors.Author_books_authors': 3})
+
+In [45]: b.save()
+
+In [46]: b.save()
+
+In [47]: b.values()
+---------------------------------------------------------------------------
+AttributeError                            Traceback (most recent call last)
+<ipython-input-47-59222bf34b5b> in <module>()
+----> 1 b.values()
+
+AttributeError: 'Author' object has no attribute 'values'
+
+In [48]: Author.objects.get(id=2).books_authors.add(Book.objects.get(id=1),Book.objects.get(id=2),Book.objects.get(id=3))
+---------------------------------------------------------------------------
+DoesNotExist                              Traceback (most recent call last)
+<ipython-input-48-2312b784820f> in <module>()
+----> 1 Author.objects.get(id=2).books_authors.add(Book.objects.get(id=1),Book.objects.get(id=2),Book.objects.get(id=3))
+
+/Users/gwb/Desktop/DojoAssignments/Python/python_stack/myEnvironments/djangoenv/lib/python2.7/site-packages/django/db/models/manager.pyc in manager_method(self, *args, **kwargs)
+     83         def create_method(name, method):
+     84             def manager_method(self, *args, **kwargs):
+---> 85                 return getattr(self.get_queryset(), name)(*args, **kwargs)
+     86             manager_method.__name__ = method.__name__
+     87             manager_method.__doc__ = method.__doc__
+
+/Users/gwb/Desktop/DojoAssignments/Python/python_stack/myEnvironments/djangoenv/lib/python2.7/site-packages/django/db/models/query.pyc in get(self, *args, **kwargs)
+    383             raise self.model.DoesNotExist(
+    384                 "%s matching query does not exist." %
+--> 385                 self.model._meta.object_name
+    386             )
+    387         raise self.model.MultipleObjectsReturned(
+
+DoesNotExist: Author matching query does not exist.
+
+In [49]: b.id
+Out[49]: 6
+
+In [50]: b.id = 2
+
+In [51]: b.id
+Out[51]: 2
+
+In [52]: b.save()
+
+In [53]: b.delete()
+Out[53]: (1, {u'book_authors.Author': 1, u'book_authors.Author_books_authors': 0})
+
+In [54]: b.id = 2
+
+In [55]: b.id
+Out[55]: 2
+
+In [56]: b.save()
+
+In [57]: b = Author.objects.get(id=6)
+
+In [58]: b.id
+Out[58]: 6
+
+In [59]: b.delete()
+Out[59]: (1, {u'book_authors.Author': 1, u'book_authors.Author_books_authors': 0})
+
+In [60]: Author.objects.get(id=2).books_authors.add(Book.objects.get(id=1),Book.objects.get(id=2),Book.objects.get(id=3))
+
+In [61]: Book.objects.get(id=3).authors.first()
+Out[61]: <Author: Author object>
+
+In [62]: Book.objects.get(id=3).authors.first().values()
+---------------------------------------------------------------------------
+AttributeError                            Traceback (most recent call last)
+<ipython-input-62-4606a9ab91ce> in <module>()
+----> 1 Book.objects.get(id=3).authors.first().values()
+
+AttributeError: 'Author' object has no attribute 'values'
+
+In [63]: Book.objects.get(id=3).authors.first().first_name
+Out[63]: u'Speros'
+
+In [64]: Book.objects.get(id=3).authors.remove.first()
+---------------------------------------------------------------------------
+AttributeError                            Traceback (most recent call last)
+<ipython-input-64-352a6e38430e> in <module>()
+----> 1 Book.objects.get(id=3).authors.remove.first()
+
+AttributeError: 'function' object has no attribute 'first'
+
+In [65]: b = Book.objects.get(id=3).authors.first()
+
+In [66]: b = Book.objects.get(id=3).authors.remove(Author.objects.get(id=2))
+
+In [67]: Book.objects.get(id=2).authors.add(Author.objects.get(id=5))
+
+In [68]: Author.objects.get(id=3).book_authors.all()
+---------------------------------------------------------------------------
+AttributeError                            Traceback (most recent call last)
+<ipython-input-68-dcd4a665d28c> in <module>()
+----> 1 Author.objects.get(id=3).book_authors.all()
+
+AttributeError: 'Author' object has no attribute 'book_authors'
+
+In [69]: Author.objects.get(id=3).books_authors.all()
+Out[69]: <QuerySet [<Book: Book object>, <Book: Book object>, <Book: Book object>, <Book: Book object>]>
+
+In [70]: Author.objects.get(id=3).books_authors.all().name
+---------------------------------------------------------------------------
+AttributeError                            Traceback (most recent call last)
+<ipython-input-70-933f5b021414> in <module>()
+----> 1 Author.objects.get(id=3).books_authors.all().name
+
+AttributeError: 'QuerySet' object has no attribute 'name'
+
+In [71]: Author.objects.get(id=3).books_authors.first()
+Out[71]: <Book: Book object>
+
+In [72]: Author.objects.get(id=3).books_authors.first().name
+Out[72]: u'C#'
+
+In [73]: Author.objects.get(id=3).books_authors.name
+
+In [74]: Author.objects.get(id=3).books_authors.all("name")
+---------------------------------------------------------------------------
+TypeError                                 Traceback (most recent call last)
+<ipython-input-74-ea3c707cac8d> in <module>()
+----> 1 Author.objects.get(id=3).books_authors.all("name")
+
+TypeError: all() takes exactly 1 argument (2 given)
+
+In [75]: Author.objects.get(id=3).books_authors.all()
+Out[75]: <QuerySet [<Book: Book object>, <Book: Book object>, <Book: Book object>, <Book: Book object>]>
+
+In [76]: b = Author.objects.get(id=3).books_authors.all()
+
+In [77]: b.name
+---------------------------------------------------------------------------
+AttributeError                            Traceback (most recent call last)
+<ipython-input-77-5bdf1b74c346> in <module>()
+----> 1 b.name
+
+AttributeError: 'QuerySet' object has no attribute 'name'
+
+In [78]: for name in b
+  File "<ipython-input-78-35428bdabc2b>", line 1
+    for name in b
+                 ^
+SyntaxError: invalid syntax
+
+
+In [79]: for name in b:
+    ...:     print name.name
+    ...:     
+C#
+Java
+Python
+PHP
+
+In [80]: for name in b:
+    ...:     print name.id
+    ...:     
+    ...:     
+1
+2
+3
+4
+
+In [81]: c = Author.objects.get(id=2).books_authors.all()
+
+In [82]: for x in c:
+    ...:     print x.id
+    ...:     
+1
+2
